@@ -7,9 +7,23 @@ function createStore() {
 
   // 1 State
   let state;
+  let listeners = [];
 
   // 2 Get
   const getState = () => state;
 
-  return getState;
+  // 3 Listen
+  const subscribe = (listener) => {
+    // Push the function that is being passed to 'subscribe' when it is invoked
+    listeners.push(listener);
+    // Unsubscribe: filter out the original listener function that was passed in when 'subscribe' was invoked
+    return () => {
+      listeners = listeners.filter((l) => l !== listener);
+    };
+  };
+
+  return { getState, subscribe };
 }
+
+// Get back the store
+const store = createStore();
