@@ -1,3 +1,15 @@
+// Reducer Function
+// Update internal state of our store
+function todos(state = [], action) {
+  // Listen to a specific event type
+  if (action.type === 'ADD_TODO') {
+    // Concatenate new todo item on to the state and returns new array
+    return state.concat([action.todo]);
+  }
+
+  return state;
+}
+
 function createStore() {
   // The store should have four parts:
   // 1. The state.
