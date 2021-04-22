@@ -38,20 +38,20 @@ function createStore(reducer) {
 /* App Code */
 
 // Reducer Function
-// Update internal state of our store
+// Cases to update the internal state of our store
 function todos(state = [], action) {
   // Listen to a specific event type
-  if (action.type === 'ADD_TODO') {
-    // Concatenate new todo item on to the state and returns new array
-    return state.concat([action.todo]);
-  } else if (action.type === 'REMOVE_TODO') {
-    return state.filter((todo) => todo.id !== action.id);
-  } else if (action.type === 'TOGGLE_TODO') {
-    return state.map((todo) =>
-      todo.id !== action.id ? todo : Object.assign({}, todo, { complete: !todo.complete })
-    );
-  } else {
-    return state;
+  switch (action.type) {
+    case 'ADD_TODO':
+      return state.concat([action.todo]);
+    case 'REMOVE_TODO':
+      return state.filter((todo) => todo.id !== action.id);
+    case 'TOGGLE_TODO':
+      return state.map((todo) =>
+        todo.id !== action.id ? todo : Object.assign({}, todo, { complete: !todo.complete })
+      );
+    default:
+      return state;
   }
 }
 
