@@ -37,7 +37,7 @@ function createStore(reducer) {
 
 /* App Code */
 
-// Reducer Function
+// Reducer Function 1
 // Cases to update the internal state of our store
 function todos(state = [], action) {
   // Listen to a specific event type
@@ -55,7 +55,19 @@ function todos(state = [], action) {
   }
 }
 
-// Create instance of our store
+// Reducer Function 2
+function goals(state = [], action) {
+  switch (action.type) {
+    case 'ADD_GOAL':
+      return state.concat([action.goal]);
+    case 'REMOVE_GOAL':
+      return state.filter((goal) => goal.id !== action.id);
+    default:
+      return state;
+  }
+}
+
+// Create instance of our store, passing a single reducer
 const store = createStore(todos);
 
 // Listener for whenever the state changes
