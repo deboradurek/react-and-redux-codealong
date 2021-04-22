@@ -44,9 +44,15 @@ function todos(state = [], action) {
   if (action.type === 'ADD_TODO') {
     // Concatenate new todo item on to the state and returns new array
     return state.concat([action.todo]);
+  } else if (action.type === 'REMOVE_TODO') {
+    return state.filter((todo) => todo.id !== action.id);
+  } else if (action.type === 'TOGGLE_TODO') {
+    return state.map((todo) =>
+      todo.id !== action.id ? todo : Object.assign({}, todo, { complete: !todo.complete })
+    );
+  } else {
+    return state;
   }
-
-  return state;
 }
 
 // Create instance of our store
