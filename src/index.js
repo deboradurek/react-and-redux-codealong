@@ -1,16 +1,6 @@
-// Reducer Function
-// Update internal state of our store
-function todos(state = [], action) {
-  // Listen to a specific event type
-  if (action.type === 'ADD_TODO') {
-    // Concatenate new todo item on to the state and returns new array
-    return state.concat([action.todo]);
-  }
+/* Library Code */
 
-  return state;
-}
-
-function createStore() {
+function createStore(reducer) {
   // The store should have four parts:
   // 1. The state.
   // 2. Get the state.
@@ -34,8 +24,27 @@ function createStore() {
     };
   };
 
-  return { getState, subscribe };
+  // 4 Update
+  const dispatch = (action) => {
+    // Get the new state
+    state = reducer(state, action);
+    // Invoke all listeners set up by the user
+    listeners.forEach((listener) => listener());
+  };
+
+  return { getState, subscribe, dispatch };
 }
 
-// Get back the store
-const store = createStore();
+/* App Code */
+
+// Reducer Function
+// Update internal state of our store
+function todos(state = [], action) {
+  // Listen to a specific event type
+  if (action.type === 'ADD_TODO') {
+    // Concatenate new todo item on to the state and returns new array
+    return state.concat([action.todo]);
+  }
+
+  return state;
+}
