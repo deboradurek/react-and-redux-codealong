@@ -48,3 +48,19 @@ function todos(state = [], action) {
 
   return state;
 }
+
+// Create instance of our store
+const store = createStore(todos);
+
+// Listener for whenever the state changes
+store.subscribe(() => console.log('The new state is: ', store.getState()));
+
+// Update state with an action object
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: {
+    id: 0,
+    name: 'Learn Redux',
+    complete: false,
+  },
+});
