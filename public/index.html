@@ -177,6 +177,8 @@
         };
       }
 
+      // DOM code
+
       // Functions to hook buttons
       function addTodo() {
         const input = document.getElementById('todo');
@@ -209,11 +211,39 @@
 
       document.getElementById('goalBtn').addEventListener('click', addGoal);
 
+      // Functions to populate the DOM
+      function addTodoToDOM(todo) {
+        const node = document.createElement('li');
+        const text = document.createTextNode(todo.name);
+        node.appendChild(text);
+        console.log(todo);
+
+        document.getElementById('todos').appendChild(node);
+      }
+
+      function addGoalToDOM(goal) {
+        const node = document.createElement('li');
+        const text = document.createTextNode(goal.name);
+        node.appendChild(text);
+
+        document.getElementById('goals').appendChild(node);
+      }
+
       // Create instance of our store, passing a single reducer
       const store = createStore(app);
 
       // Listener for whenever the state changes
-      store.subscribe(() => console.log('The new state is: ', store.getState()));
+      store.subscribe(() => {
+        const { todos, goals } = store.getState();
+
+        document.getElementById('todos').innerHTML = '';
+        document.getElementById('goals').innerHTML = '';
+
+        todos.forEach(addTodoToDOM);
+        goals.forEach(addGoalToDOM);
+
+        // console.log('The new state is: ', store.getState())
+      });
 
       // Update state with an action object, using action creator functions
       // store.dispatch(
