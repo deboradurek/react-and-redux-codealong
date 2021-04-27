@@ -22,6 +22,9 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Udacity Todos Goals</title>
+
+    <!-- Redux Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
   </head>
   <body>
     <div>
@@ -55,43 +58,6 @@
       // Helper Function to generate ID
       function generateId() {
         return Math.random().toString(36).substring(2) + new Date().getTime().toString(36);
-      }
-
-      /* Library Code */
-
-      function createStore(reducer) {
-        // The store should have four parts:
-        // 1. The state.
-        // 2. Get the state.
-        // 3. Listen to changes on the state.
-        // 4. Update the state.
-
-        // 1 State
-        let state;
-        let listeners = [];
-
-        // 2 Get
-        const getState = () => state;
-
-        // 3 Listen
-        const subscribe = (listener) => {
-          // Push the function that is being passed to 'subscribe' when it is invoked
-          listeners.push(listener);
-          // Unsubscribe: filter out the original listener function that was passed in when 'subscribe' was invoked
-          return () => {
-            listeners = listeners.filter((l) => l !== listener);
-          };
-        };
-
-        // 4 Update
-        const dispatch = (action) => {
-          // Get the new state
-          state = reducer(state, action);
-          // Invoke all listeners set up by the user
-          listeners.forEach((listener) => listener());
-        };
-
-        return { getState, subscribe, dispatch };
       }
 
       /* App Code */
@@ -130,15 +96,6 @@
           default:
             return state;
         }
-      }
-
-      // Root Reducer
-      function app(state = {}, action) {
-        return {
-          // All reducers will be invoked: todos() and goals()
-          todos: todos(state.todos, action),
-          goals: goals(state.goals, action),
-        };
       }
 
       // Action Creators
@@ -254,7 +211,12 @@
       }
 
       // Create instance of our store, passing a single reducer
-      const store = createStore(app);
+      const store = Redux.createStore(
+        Redux.combineReducers({
+          todos,
+          goals,
+        })
+      );
 
       // Listener for whenever the state changes
       store.subscribe(() => {
