@@ -189,11 +189,9 @@
 
         // Toggle strikethrough for complete item
         node.style.textDecoration = todo.complete ? 'line-through' : 'none';
-
         node.addEventListener('click', () => {
           store.dispatch(toggleTodoAction(todo.id));
         });
-
         document.getElementById('todos').appendChild(node);
       }
 
@@ -227,13 +225,23 @@
         };
       }
 
+      const logger = (store) => (next) => (action) => {
+        console.group(action.type);
+        console.log('The action: ', action);
+        const result = next(action);
+        console.log('The new state: ', store.getState());
+        console.groupEnd();
+
+        return result;
+      };
+
       // Create instance of our store, passing a single reducer
       const store = Redux.createStore(
         Redux.combineReducers({
           todos,
           goals,
         }),
-        Redux.applyMiddleware(checker)
+        Redux.applyMiddleware(checker, logger)
       );
 
       // Listener for whenever the state changes
