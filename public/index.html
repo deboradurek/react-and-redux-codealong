@@ -263,18 +263,26 @@
     </script>
 
     <script type="text/babel">
+      // LIST component
       function List(props) {
         return (
           <ul>
             {props.items.map((item) => (
               <li key={item.id}>
-                <span>{item.name}</span>
+                <span
+                  onClick={() => props.toggle && props.toggle(item.id)}
+                  style={{ textDecoration: item.complete ? 'line-through' : 'none' }}
+                >
+                  {item.name}
+                </span>
                 <button onClick={() => props.remove(item)}>X</button>
               </li>
             ))}
           </ul>
         );
       }
+
+      // TODOS component
 
       class Todos extends React.Component {
         addItem = (e) => {
@@ -295,6 +303,10 @@
           this.props.store.dispatch(removeTodoAction(todo.id));
         };
 
+        toggleItem = (id) => {
+          this.props.store.dispatch(toggleTodoAction(id));
+        };
+
         render() {
           return (
             <div>
@@ -302,11 +314,13 @@
               <input type="text" placeholder="Add Todo" ref={(input) => (this.input = input)} />
               <button onClick={this.addItem}>Add Todo</button>
 
-              <List items={this.props.todos} remove={this.removeItem} />
+              <List items={this.props.todos} remove={this.removeItem} toggle={this.toggleItem} />
             </div>
           );
         }
       }
+
+      // GOALS component
 
       class Goals extends React.Component {
         addItem = (e) => {
@@ -338,6 +352,8 @@
         }
       }
 
+      // APP component
+
       class App extends React.Component {
         componentDidMount() {
           const { store } = this.props;
@@ -357,6 +373,8 @@
           );
         }
       }
+
+      // RENDER call
 
       ReactDOM.render(<App store={store} />, document.getElementById('app'));
     </script>
