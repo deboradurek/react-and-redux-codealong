@@ -30,7 +30,11 @@
     <script src="https://unpkg.com/react@16.3.0-alpha.1/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16.3.0-alpha.1/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <!-- External API Simulation -->
+    <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
   </head>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
@@ -254,6 +258,12 @@
       class App extends React.Component {
         componentDidMount() {
           const { store } = this.props;
+
+          // Console.log all todos and goals living inside de fake database
+          Promise.all([API.fetchTodos(), API.fetchGoals()]).then(([todos, goals]) => {
+            console.log('Todos', todos);
+            console.log('Goals', goals);
+          });
 
           store.subscribe(() => this.forceUpdate());
         }
