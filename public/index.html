@@ -210,6 +210,7 @@
       // TODOS component
 
       class Todos extends React.Component {
+        // Add todo
         addItem = (e) => {
           e.preventDefault();
           const name = this.input.value;
@@ -224,6 +225,7 @@
           );
         };
 
+        // Remove todo
         removeItem = (todo) => {
           this.props.store.dispatch(removeTodoAction(todo.id));
 
@@ -233,8 +235,14 @@
           });
         };
 
+        // Toggle todo
         toggleItem = (id) => {
           this.props.store.dispatch(toggleTodoAction(id));
+
+          return API.saveTodoToggle(id).catch(() => {
+            this.props.store.dispatch(toggleTodoAction(id));
+            alert('An error occurred. Try again.');
+          });
         };
 
         render() {
@@ -253,6 +261,7 @@
       // GOALS component
 
       class Goals extends React.Component {
+        // Add goal
         addItem = (e) => {
           e.preventDefault();
           const name = this.input.value;
@@ -266,6 +275,7 @@
           );
         };
 
+        // Remove goal
         removeItem = (goal) => {
           this.props.store.dispatch(removeGoalAction(goal.id));
 
