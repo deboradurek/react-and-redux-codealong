@@ -153,6 +153,17 @@
         };
       }
 
+      function handleDeleteTodo(todo) {
+        return (dispatch) => {
+          dispatch(removeTodoAction(todo.id));
+
+          return API.deleteTodo(todo.id).catch(() => {
+            dispatch(addTodoAction(todo));
+            alert('An error occurred. Try again.');
+          });
+        };
+      }
+
       // Middleware
       const checker = (store) => (next) => (action) => {
         if (action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')) {
@@ -176,6 +187,13 @@
         return result;
       };
 
+      const thunk = (store) => (next) => (action) => {
+        if (typeof action === 'function') {
+          return action(store.dispatch);
+        }
+        return next(action);
+      };
+
       // Create instance of our store, passing a single reducer
       const store = Redux.createStore(
         Redux.combineReducers({
@@ -183,7 +201,7 @@
           goals,
           loading,
         }),
-        Redux.applyMiddleware(checker, logger)
+        Redux.applyMiddleware(thunk, checker, logger)
       );
     </script>
 
@@ -227,13 +245,7 @@
         // Remove todo
         removeItem = (todo) => {
           const { dispatch } = this.props.store;
-
-          dispatch(removeTodoAction(todo.id));
-
-          return API.deleteTodo(todo.id).catch(() => {
-            dispatch(addTodoAction(todo));
-            alert('An error occurred. Try again.');
-          });
+          dispatch(handleDeleteTodo(todo));
         };
 
         // Toggle todo
