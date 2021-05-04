@@ -214,9 +214,11 @@
         addItem = (e) => {
           e.preventDefault();
 
+          const { dispatch } = this.props.store;
+
           return API.saveTodo(this.input.value)
             .then((todo) => {
-              this.props.store.dispatch(addTodoAction(todo));
+              dispatch(addTodoAction(todo));
               this.input.value = '';
             })
             .catch(() => alert('An error occurred. Try again'));
@@ -224,20 +226,24 @@
 
         // Remove todo
         removeItem = (todo) => {
-          this.props.store.dispatch(removeTodoAction(todo.id));
+          const { dispatch } = this.props.store;
+
+          dispatch(removeTodoAction(todo.id));
 
           return API.deleteTodo(todo.id).catch(() => {
-            this.props.store.dispatch(addTodoAction(todo));
+            dispatch(addTodoAction(todo));
             alert('An error occurred. Try again.');
           });
         };
 
         // Toggle todo
         toggleItem = (id) => {
-          this.props.store.dispatch(toggleTodoAction(id));
+          const { dispatch } = this.props.store;
+
+          dispatch(toggleTodoAction(id));
 
           return API.saveTodoToggle(id).catch(() => {
-            this.props.store.dispatch(toggleTodoAction(id));
+            dispatch(toggleTodoAction(id));
             alert('An error occurred. Try again.');
           });
         };
