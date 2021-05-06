@@ -209,6 +209,14 @@
         };
       }
 
+      function handleInitialData() {
+        return (dispatch) => {
+          return Promise.all([API.fetchTodos(), API.fetchGoals()]).then(([todos, goals]) => {
+            dispatch(receiveDataAction(todos, goals));
+          });
+        };
+      }
+
       // Middleware
       const checker = (store) => (next) => (action) => {
         if (action.type === ADD_TODO && action.todo.name.toLowerCase().includes('bitcoin')) {
@@ -330,10 +338,7 @@
         componentDidMount() {
           const { store } = this.props;
 
-          // Console.log all todos and goals living inside de fake database
-          Promise.all([API.fetchTodos(), API.fetchGoals()]).then(([todos, goals]) => {
-            store.dispatch(receiveDataAction(todos, goals));
-          });
+          store.dispatch(handleInitialData());
 
           store.subscribe(() => this.forceUpdate());
         }
