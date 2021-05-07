@@ -305,9 +305,9 @@
       }
 
       // Connected Todos
-      const ConnectedTodos = connect((state) => {
-        todos: state.todos;
-      })(Todos);
+      const ConnectedTodos = connect((state) => ({
+        todos: state.todos,
+      }))(Todos);
 
       // GOALS component
 
@@ -337,9 +337,9 @@
       }
 
       // Connected Goals
-      const ConnectedGoals = connect((state) => {
-        goals: state.goals;
-      })(Goals);
+      const ConnectedGoals = connect((state) => ({
+        goals: state.goals,
+      }))(Goals);
 
       // APP component
 
@@ -368,12 +368,50 @@
 
       // Connect Function (Kering Technique)
       // Higher-order Function: Receives any data needed from the store and the component to be rendered.
-      const ConnectedApp = connect((state) => {
-        loading: state.loading;
-      })(App);
+      const ConnectedApp = connect((state) => ({
+        loading: state.loading,
+      }))(App);
 
       // Context object that 2 properties: Provider and Consumer
       const Context = React.createContext();
+
+      // Connect Function
+      function connect(mapStateToProps) {
+        return (Component) => {
+          // Listen for changes
+          class Receiver extends React.Component {
+            componentDidMount() {
+              const { subscribe } = this.props.store;
+
+              this.unsubscribe = subscribe(() => {
+                this.forceUpdate();
+              });
+            }
+
+            // Cancel subscription: it will no longer call forceUpdate()
+            componentWillUnmount() {
+              this.unsubscribe();
+            }
+
+            render() {
+              const { dispatch, getState } = this.props.store;
+              const state = getState();
+              const stateNeeded = mapStateToProps(state);
+
+              return <Component {...stateNeeded} dispatch={dispatch} />;
+            }
+          }
+
+          // Get the store com Context
+          class ConnectedComponent extends React.Component {
+            render() {
+              return <Context.Consumer>{(store) => <Receiver store={store} />}</Context.Consumer>;
+            }
+          }
+
+          return ConnectedComponent;
+        };
+      }
 
       // Provider function
       class Provider extends React.Component {
