@@ -305,19 +305,9 @@
       }
 
       // Connected Todos
-      class ConnectedTodos extends React.Component {
-        render() {
-          return (
-            <Context.Consumer>
-              {(store) => {
-                const { todos } = store.getState();
-
-                return <Todos dispatch={store.dispatch} todos={todos} />;
-              }}
-            </Context.Consumer>
-          );
-        }
-      }
+      const ConnectedTodos = connect((state) => {
+        todos: state.todos;
+      })(Todos);
 
       // GOALS component
 
@@ -347,36 +337,21 @@
       }
 
       // Connected Goals
-      class ConnectedGoals extends React.Component {
-        render() {
-          return (
-            <Context.Consumer>
-              {(store) => {
-                const { goals } = store.getState();
-
-                return <Goals dispatch={store.dispatch} goals={goals} />;
-              }}
-            </Context.Consumer>
-          );
-        }
-      }
+      const ConnectedGoals = connect((state) => {
+        goals: state.goals;
+      })(Goals);
 
       // APP component
 
       class App extends React.Component {
         componentDidMount() {
-          const { store } = this.props;
+          const { dispatch } = this.props;
 
-          store.dispatch(handleInitialData());
-
-          store.subscribe(() => this.forceUpdate());
+          dispatch(handleInitialData());
         }
 
         render() {
-          const { store } = this.props;
-          const { loading } = store.getState();
-
-          if (loading === true) {
+          if (this.props.loading === true) {
             return <h3>Loading...</h3>;
           }
 
@@ -391,11 +366,11 @@
 
       // RENDER call
 
-      class ConnectedApp extends React.Component {
-        render() {
-          return <Context.Consumer>{(store) => <App store={store} />}</Context.Consumer>;
-        }
-      }
+      // Connect Function (Kering Technique)
+      // Higher-order Function: Receives any data needed from the store and the component to be rendered.
+      const ConnectedApp = connect((state) => {
+        loading: state.loading;
+      })(App);
 
       // Context object that 2 properties: Provider and Consumer
       const Context = React.createContext();
