@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { handleInitialData } from '../actions/shared';
 import ConnectedTodos from './Todos';
